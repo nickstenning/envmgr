@@ -6,7 +6,6 @@ import sys
 from envmgr.parser import EnvConfParser
 
 logging.basicConfig()
-log = logging.getLogger('envmgr')
 
 parser = argparse.ArgumentParser(description='Spawn processes in a controlled environment.')
 parser.add_argument('--name', '-n',

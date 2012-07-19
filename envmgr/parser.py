@@ -1,5 +1,8 @@
 import os
+import logging
 import re
+
+log = logging.getLogger(__name__)
 
 
 class ParseError(Exception):
@@ -18,11 +21,18 @@ class EnvConfParser(object):
             self.env = start.copy()
 
     def parse(self):
-        with open(self._get_fname()) as f:
-            for line in f:
-                self.parse_line(line)
+        fname = self._get_fname()
 
-            return self.env
+        try:
+            fp = open(fname)
+        except IOError:
+            log.warn("Couldn't open envmgr config '%s': treating as blank!", fname)
+        else:
+            with fp:
+                for line in fp:
+                    self.parse_line(line)
+
+        return self.env
 
     def parse_line(self, line):
         line = line.strip()

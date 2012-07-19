@@ -43,3 +43,7 @@ class TestEnvConfParser(unittest.TestCase):
     def test_parse_error(self):
         p = EnvConfParser('parse_error', FIXTURES, {})
         self.assertRaises(ParseError, p.parse)
+
+    def test_nonexistent(self):
+        p = EnvConfParser('i_dont_exist', FIXTURES, {})
+        p.parse()
