@@ -69,6 +69,18 @@ Any other nonblank lines will be interpreted by `envmgr` as attempts to set an e
 
 Anything that doesn't conform to one of the above patterns will probably raise a `ParseError` and the baby Jesus will cry. Or something.
 
+As of version 0.0.3, `envmgr` will do some basic interpolation for you:
+
+    NAME=Marcus
+    HELLO_MARCUS="Hello, $NAME"       # this will be "Hello, Marcus"
+    HELLO_UNDEF="Hello, $IDONTEXIST"  # this will be "Hello, "
+    HELLO_SINGLES='Hello, $NAME'      # this will be "Hello, $NAME"
+
+**NB**: one gotcha is that `envmgr` does not use a shell-compliant lexer at the moment, so the following will *not* work as you might expect:
+
+    NAME=Marcus
+    HELLO_ESCAPED="Hello \$NAME"      # Gotcha! this will be "Hello \Marcus"
+
 Hacking
 -------
 
