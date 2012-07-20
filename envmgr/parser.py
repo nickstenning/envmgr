@@ -1,6 +1,8 @@
+from collections import defaultdict
 import os
 import logging
 import re
+import string
 
 log = logging.getLogger(__name__)
 
@@ -68,6 +70,7 @@ class EnvConfParser(object):
         self.env = {}
 
     def parse_env_line(self, line):
+        interpolate = True
         line = line.strip()
         m1 = re.match(r'\A([A-Za-z_][A-Za-z_0-9]*)=(.*)\Z', line)
         if m1:
@@ -75,11 +78,18 @@ class EnvConfParser(object):
 
             m2 = re.match(r"\A'(.*)'\Z", val)
             if m2:
+                interpolate = False
                 val = m2.group(1)
 
             m3 = re.match(r'\A"(.*)"\Z', val)
             if m3:
                 val = re.sub(r'\\(.)', r'\1', m3.group(1))
+
+            if interpolate:
+                env_default_blank = defaultdict(str)
+                env_default_blank.update(self.env)
+
+                val = string.Template(val).substitute(env_default_blank)
 
             self.env[key] = val
         else:

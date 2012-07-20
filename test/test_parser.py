@@ -47,3 +47,13 @@ class TestEnvConfParser(unittest.TestCase):
     def test_nonexistent(self):
         p = EnvConfParser('i_dont_exist', FIXTURES, {})
         p.parse()
+
+    def test_interpolate(self):
+        p = EnvConfParser('interpolate', FIXTURES, {})
+        r = p.parse()
+        self.assertEqual(r['BLANK'], '')
+        self.assertEqual(r['BAR_SLASH_BAR'], 'bar/bar')
+        self.assertEqual(r['BAR_BAR'], 'bar_bar')
+        self.assertEqual(r['NOT_INTERP'], '$FOO')
+        self.assertEqual(r['INTERP'], 'bar')
+
